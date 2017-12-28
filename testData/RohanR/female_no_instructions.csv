@@ -1,4 +1,4 @@
-time,accelerometer-x,accelerometer-y,accelerometer-z,gyro-x,gyro-y,gyro-z
+time,x accel,y accel,z accel,x gryo,y gyro,z gyro
 0.0,0.0,0.0,0.0,0.0,0.0,0.0#
 211.0,0.0,0.0,0.0,0.0,0.0,0.0#
 317.0,-0.122146,8.746612,0.94603276,0.26205507,-0.024501082,-0.27696875#

@@ -4,69 +4,56 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.math.plot.Plot2DPanel;
 
 import processing.core.PApplet;
 
-public class TestDataExplorer extends PApplet {
-	private final String COLUMN_TO_GRAPH = "x acc";
-	private final String DATA_PATH = "alejandro/";
-	
-	private int currentIndex = 0;
-	DataFileSet dataset = new DataFileSet();
-	DataFile currentDataFile;
+public class TestDataExplorer {
+	private static final String DATA_PATH = "alejandro";
 
-	public void setup() {
-		size(600, 600);
+	public static void main(String[] args) {
+		DataFileSet dataset = new DataFileSet();
+
 		dataset.addDataFrom(DATA_PATH);
 		System.out.println("Loaded " + dataset.size() + " files.");
-		currentDataFile = dataset.get(0);
-		CSVData csvdata = currentDataFile.getData();
 
-		
-		double[][] data = csvdata.getDataForColumns(new String[] { "time", COLUMN_TO_GRAPH });
-		System.out.println(data.length + " " + data[0].length);
-		
-		graphData(data);
-	}
+		for (int i = 0; i < dataset.size(); i++) {
+			System.out.println("Displaying File #" + i);
+			System.out.println("\n\n");
+			System.out.println();
 
-	public void draw() {
-		background(255);
+			DataFile currentDataFile = dataset.get(i);
+			System.out.println(currentDataFile);
 
-		fill(0);
-		textSize(14);
-		text("Data file #" + currentIndex, 10, 15);
-		text(currentDataFile.toString(), 10, 35);
-	}
+			CSVData csvdata = currentDataFile.getData();
 
-	public void keyReleased() {
-		currentIndex++;
-		if (currentIndex >= dataset.size())
-			currentIndex = 0;
+			// ------------ Fetch data to graph --------------------------------------
+			double[][] data1 = csvdata.getDataForColumns(new String[] { "time", "x acc" });
 
-		System.out.println("index now : " + currentIndex);
-		
-		currentDataFile = dataset.get(currentIndex);
-		System.out.println("Loading data file: " + currentDataFile.getMetaData("filename"));
-		CSVData csvdata = currentDataFile.getData();
+			// --== uncomment these to display more axes at onces ==--
+			// double[][] data2 = csvdata.getDataForColumns(new String[] { "time", "y
+			// acc"});
+			// double[][] data3 = csvdata.getDataForColumns(new String[] { "time", "z
+			// acc"});
 
-		double[][] data = csvdata.getDataForColumns(new String[] { "time", COLUMN_TO_GRAPH });
+			Plot2DPanel plot = new Plot2DPanel();
 
-		graphData(data);
-	}
+			// ------------ Add data to plot to the PlotPanel --------------------------
+			plot.addLinePlot("x", data1);
 
-	public static void graphData(double[][] data) {
-		Plot2DPanel plot = new Plot2DPanel();
+			// --== uncomment these to graph more lines for data fetched above ==--
+			// plot.addLinePlot("y", data2);
+			// plot.addLinePlot("z", data3);
 
-		// add a line plot to the PlotPanel
-		plot.addLinePlot("y", data);
-		
-		// put the PlotPanel in a JFrame, as a JPanel
-		JFrame frame = new JFrame("Results");
-		frame.setBounds(600, 50, 800, 600);
-		//frame.setSize(800, 600);
-		frame.setContentPane(plot);
-		frame.setVisible(true);
+			// put the PlotPanel in a JFrame, as a JPanel
+			JFrame frame = new JFrame(currentDataFile.getMetaData("filename"));
+			frame.setBounds(600, 50, 800, 600);
+			// frame.setSize(800, 600);
+			frame.setContentPane(plot);
+			frame.setVisible(true);
+			
+		}
 	}
 }

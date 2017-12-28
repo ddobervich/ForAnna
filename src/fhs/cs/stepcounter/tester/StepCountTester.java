@@ -13,7 +13,7 @@ import fhs.cs.stepcounter.dataexplorer.DataFileSet;
 import fhs.cs.stepcounter.interfaces.StepCounter;
 
 public class StepCountTester {
-	private static final String DATA_PATH = "alejandro/";
+	private static final String DATA_PATH = "Dobervich/";
 
 	public static void main(String[] args) {
 		StepCounter counter = new NaiveStepCounter();
