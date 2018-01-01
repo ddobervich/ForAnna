@@ -38,6 +38,10 @@ public class TestDataExplorer {
 
 			// ------------ Add data to plot to the PlotPanel --------------------------
 			plot.addLinePlot("magnitudes", data1);
+			
+			// --== Uncomment 2 lines below to graph your predicted step points ==--
+			// double[][] stepVals = buildStepPointArray(counter);
+			// plot.addScatterPlot("steps", stepVals);
 
 			// put the PlotPanel in a JFrame, as a JPanel
 			JFrame frame = new JFrame(currentDataFile.getMetaData("filename"));
@@ -47,5 +51,19 @@ public class TestDataExplorer {
 			frame.setVisible(true);
 			
 		}
+	}
+	
+	private static double[][] buildStepPointArray(NaiveStepCounter counter) {
+		int steps = counter.countSteps();
+		int[] stepIndexes = counter.getStepIndexes();
+		double[] data1 = counter.getDataForGraphing();
+		
+		double[][] stepVals = new double[steps][2];
+		for (int j = 0; j < stepVals.length; j++) {
+			stepVals[j][0] = stepIndexes[j];
+			stepVals[j][1] = data1[stepIndexes[j]];
+		}
+		
+		return stepVals;
 	}
 }
