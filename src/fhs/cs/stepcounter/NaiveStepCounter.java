@@ -3,10 +3,12 @@ package fhs.cs.stepcounter;
 import fhs.cs.stepcounter.dataexplorer.CSVData;
 import fhs.cs.stepcounter.interfaces.StepCounter;
 
-public class NaiveStepCounter implements StepCounter {
+public class NaiveStepCounter {
 	private CSVData data;
 	private double[] magnitudes;
+	private int[] stepIndexes;
 	private static final double THRESHOLD = 1.4;
+	private static final int MAX_STEPS_TO_GRAPH = 100;
 
 	public NaiveStepCounter() {
 		this.data = null;
@@ -15,7 +17,7 @@ public class NaiveStepCounter implements StepCounter {
 	public NaiveStepCounter(CSVData data) {
 		this.data = data;
 	}
-
+ 
 	/***
 	 * Return the number of steps represented by the data in CSVData object.
 	 * 
@@ -29,20 +31,26 @@ public class NaiveStepCounter implements StepCounter {
 	public int countSteps() {
 		int steps = 0;
 		double[][] accels = data.getDataForColumns(new String[] { "x acc", "y acc", "z acc" });
+		int[] stepIndexes = new int[MAX_STEPS_TO_GRAPH];
 
 		this.magnitudes = calculateMagnitudesFor(accels);
 
 		double mean = calculateMean(magnitudes);
 		double sd = calculateStandardDeviation(magnitudes, mean);
 
+		int nextFree = 0;
 		for (int i = 1; i < magnitudes.length - 1; i++) {
 			if (magnitudes[i] > magnitudes[i - 1] && magnitudes[i] > magnitudes[i + 1]) {
 				if (magnitudes[i] > mean + THRESHOLD * sd) {
 					steps++;
+					stepIndexes[nextFree] = i;
+					nextFree++;
 				}
 			}
 		}
 
+		this.stepIndexes = stepIndexes;
+		
 		return steps;
 	}
 
@@ -128,7 +136,18 @@ public class NaiveStepCounter implements StepCounter {
 		return this.magnitudes;
 	}
 
+	/***
+	 * Return an array giving the indexes in getDataForGraphing() where you
+	 * calculate steps occurring. This can be used to visualize/debug.
+	 * 
+	 * @return an array where the ith element contains the index corresponding to
+	 *         the ith step in getDataForGraphing()
+	 */
+	public int[] getStepIndexes() {
+		return this.stepIndexes;
+	}
+
 	public void loadData(CSVData csvdata) {
-		this.data = data;
+		this.data = csvdata;
 	}
 }

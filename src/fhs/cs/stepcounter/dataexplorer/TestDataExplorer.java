@@ -32,12 +32,16 @@ public class TestDataExplorer {
 
 			// ------------ Fetch data to graph --------------------------------------
 			NaiveStepCounter counter = new NaiveStepCounter(csvdata);
-			
+
 			double[] data1 = counter.getDataForGraphing();
+			
+			double[][] stepVals = buildStepPointArray(counter);
+
 			Plot2DPanel plot = new Plot2DPanel();
 
 			// ------------ Add data to plot to the PlotPanel --------------------------
 			plot.addLinePlot("magnitudes", data1);
+			plot.addScatterPlot("Steps", stepVals);
 
 			// put the PlotPanel in a JFrame, as a JPanel
 			JFrame frame = new JFrame(currentDataFile.getMetaData("filename"));
@@ -45,7 +49,21 @@ public class TestDataExplorer {
 			// frame.setSize(800, 600);
 			frame.setContentPane(plot);
 			frame.setVisible(true);
-			
+
 		}
+	}
+
+	private static double[][] buildStepPointArray(NaiveStepCounter counter) {
+		int steps = counter.countSteps();
+		int[] stepIndexes = counter.getStepIndexes();
+		double[] data1 = counter.getDataForGraphing();
+		
+		double[][] stepVals = new double[steps][2];
+		for (int j = 0; j < stepVals.length; j++) {
+			stepVals[j][0] = stepIndexes[j];
+			stepVals[j][1] = data1[stepIndexes[j]];
+		}
+		
+		return stepVals;
 	}
 }
