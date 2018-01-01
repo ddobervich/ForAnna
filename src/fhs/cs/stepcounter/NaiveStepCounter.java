@@ -4,6 +4,11 @@ import fhs.cs.stepcounter.dataexplorer.CSVData;
 import fhs.cs.stepcounter.interfaces.StepCounter;
 
 public class NaiveStepCounter implements StepCounter {
+	private CSVData data;
+
+	public NaiveStepCounter(CSVData data) {
+		this.data = data;
+	}
 
 	/***
 	 * Return the number of steps represented by the data in CSVData object.
@@ -16,7 +21,7 @@ public class NaiveStepCounter implements StepCounter {
 	 * @return the number of steps represented by the data.
 	 */
 	@Override
-	public int countSteps(CSVData data) {
+	public int countSteps() {
 		int steps = 0;
 		double[][] accels = data.getDataForColumns(new String[] { "x acc", "y acc", "z acc" });
 

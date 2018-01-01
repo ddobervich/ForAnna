@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 import org.math.plot.Plot2DPanel;
 
+import fhs.cs.stepcounter.NaiveStepCounter;
 import processing.core.PApplet;
 
 public class TestDataExplorer {
@@ -30,6 +31,8 @@ public class TestDataExplorer {
 			CSVData csvdata = currentDataFile.getData();
 
 			// ------------ Fetch data to graph --------------------------------------
+			NaiveStepCounter counter = new NaiveStepCounter(csvdata);
+			
 			double[][] data1 = csvdata.getDataForColumns(new String[] { "time", "x acc" });
 
 			// --== uncomment these to display more axes at onces ==--

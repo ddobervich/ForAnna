@@ -14,5 +14,5 @@ public interface StepCounter {
 	 *            a 2d array of the data.
 	 * @return the number of steps represented by the data. 
 	 */
-	public int countSteps(CSVData data);
+	public int countSteps();
 }
