@@ -33,22 +33,11 @@ public class TestDataExplorer {
 			// ------------ Fetch data to graph --------------------------------------
 			NaiveStepCounter counter = new NaiveStepCounter(csvdata);
 			
-			double[][] data1 = csvdata.getDataForColumns(new String[] { "time", "x acc" });
-
-			// --== uncomment these to display more axes at onces ==--
-			// double[][] data2 = csvdata.getDataForColumns(new String[] { "time", "y
-			// acc"});
-			// double[][] data3 = csvdata.getDataForColumns(new String[] { "time", "z
-			// acc"});
-
+			double[] data1 = counter.getDataForGraphing();
 			Plot2DPanel plot = new Plot2DPanel();
 
 			// ------------ Add data to plot to the PlotPanel --------------------------
-			plot.addLinePlot("x", data1);
-
-			// --== uncomment these to graph more lines for data fetched above ==--
-			// plot.addLinePlot("y", data2);
-			// plot.addLinePlot("z", data3);
+			plot.addLinePlot("magnitudes", data1);
 
 			// put the PlotPanel in a JFrame, as a JPanel
 			JFrame frame = new JFrame(currentDataFile.getMetaData("filename"));
