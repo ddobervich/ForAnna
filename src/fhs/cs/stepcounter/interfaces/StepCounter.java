@@ -15,4 +15,6 @@ public interface StepCounter {
 	 * @return the number of steps represented by the data. 
 	 */
 	public int countSteps();
+
+	public void loadData(CSVData csvdata);
 }

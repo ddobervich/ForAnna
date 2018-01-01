@@ -6,8 +6,22 @@ import fhs.cs.stepcounter.interfaces.StepCounter;
 public class NaiveStepCounter implements StepCounter {
 	private CSVData data;
 
+	/***
+	 * Construct a step counter object pre-loaded with data. Data may be
+	 * re-set/changed using the loadData(CSVData data) method.
+	 * 
+	 * @param data
+	 */
 	public NaiveStepCounter(CSVData data) {
 		this.data = data;
+	}
+
+	/***
+	 * No argument constructor. Client must run loadData(CSVData data) before they
+	 * can count steps
+	 */
+	public NaiveStepCounter() {
+		data = null;
 	}
 
 	/***
@@ -81,7 +95,7 @@ public class NaiveStepCounter implements StepCounter {
 	 *         the ith step in getDataForGraphing()
 	 */
 	public int[] getStepIndexes() {
-
+		return null;
 	}
 
 	/***
@@ -108,4 +122,8 @@ public class NaiveStepCounter implements StepCounter {
 		return 0.0;
 	}
 
+	@Override
+	public void loadData(CSVData csvdata) {
+		this.data = csvdata;
+	}
 }

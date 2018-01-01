@@ -28,7 +28,8 @@ public class StepCountTester {
 			int numSteps = Integer.parseInt(dataFile.getMetaData("steps"));
 
 			CSVData csvdata = dataFile.getData();
-			int calculatedSteps = counter.countSteps(csvdata);
+			counter.loadData(csvdata);
+			int calculatedSteps = counter.countSteps();
 
 			// TODO: use printf instead to format it nicely
 			System.out.printf("%-32s| %-16d| %-13d| %-13d\n", dataFile.getMetaData("filename"), calculatedSteps, numSteps,
