@@ -16,7 +16,7 @@ public class StepCountTester {
 	private static final String DATA_PATH = "Dobervich/";
 
 	public static void main(String[] args) {
-		StepCounter counter = new NaiveStepCounter();
+		NaiveStepCounter counter = new NaiveStepCounter();
 
 		DataFileSet dataset = new DataFileSet();
 		dataset.addDataFrom(DATA_PATH);

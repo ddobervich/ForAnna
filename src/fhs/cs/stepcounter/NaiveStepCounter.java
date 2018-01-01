@@ -5,23 +5,15 @@ import fhs.cs.stepcounter.interfaces.StepCounter;
 
 public class NaiveStepCounter implements StepCounter {
 	private CSVData data;
+	private double[] magnitudes;
+	private static final double THRESHOLD = 1.4;
 
-	/***
-	 * Construct a step counter object pre-loaded with data. Data may be
-	 * re-set/changed using the loadData(CSVData data) method.
-	 * 
-	 * @param data
-	 */
-	public NaiveStepCounter(CSVData data) {
-		this.data = data;
+	public NaiveStepCounter() {
+		this.data = null;
 	}
 
-	/***
-	 * No argument constructor. Client must run loadData(CSVData data) before they
-	 * can count steps
-	 */
-	public NaiveStepCounter() {
-		data = null;
+	public NaiveStepCounter(CSVData data) {
+		this.data = data;
 	}
 
 	/***
@@ -34,12 +26,22 @@ public class NaiveStepCounter implements StepCounter {
 	 *            data.
 	 * @return the number of steps represented by the data.
 	 */
-	@Override
 	public int countSteps() {
 		int steps = 0;
 		double[][] accels = data.getDataForColumns(new String[] { "x acc", "y acc", "z acc" });
 
-		/* you implement this section */
+		this.magnitudes = calculateMagnitudesFor(accels);
+
+		double mean = calculateMean(magnitudes);
+		double sd = calculateStandardDeviation(magnitudes, mean);
+
+		for (int i = 1; i < magnitudes.length - 1; i++) {
+			if (magnitudes[i] > magnitudes[i - 1] && magnitudes[i] > magnitudes[i + 1]) {
+				if (magnitudes[i] > mean + THRESHOLD * sd) {
+					steps++;
+				}
+			}
+		}
 
 		return steps;
 	}
@@ -56,7 +58,7 @@ public class NaiveStepCounter implements StepCounter {
 	 * @return the magnitude of the vector
 	 */
 	public static double calculateMagnitude(double x, double y, double z) {
-		return 0.0;
+		return Math.sqrt(x * x + y * y + z * z);
 	}
 
 	/***
@@ -73,29 +75,13 @@ public class NaiveStepCounter implements StepCounter {
 	 *         for the corresponding row in the sensorData array
 	 */
 	private static double[] calculateMagnitudesFor(double[][] accelData) {
+		double[] magnitudes = new double[accelData.length];
 
-		return null;
-	}
+		for (int i = 0; i < accelData.length; i++) {
+			magnitudes[i] = calculateMagnitude(accelData[i][0], accelData[i][1], accelData[i][2]);
+		}
 
-	/***
-	 * Return an array of values that can be used to graph. These could be values
-	 * for one sensor, or the result of calculations involving several sensors.
-	 * 
-	 * @return an array of sensor values for graphing
-	 */
-	public double[] getDataForGraphing() {
-		return null;
-	}
-
-	/***
-	 * Return an array giving the indexes in getDataForGraphing() where you
-	 * calculate steps occurring. This can be used to visualize/debug.
-	 * 
-	 * @return an array where the ith element contains the index corresponding to
-	 *         the ith step in getDataForGraphing()
-	 */
-	public int[] getStepIndexes() {
-		return null;
+		return magnitudes;
 	}
 
 	/***
@@ -108,7 +94,13 @@ public class NaiveStepCounter implements StepCounter {
 	 * @return the standard deviation of the data.
 	 */
 	private static double calculateStandardDeviation(double[] arr, double mean) {
-		return 0.0;
+		double sum = 0;
+		for (int i = 0; i < arr.length; i++) {
+			double diff = arr[i] - mean;
+			sum += diff * diff;
+		}
+
+		return Math.sqrt(sum / (arr.length - 1));
 	}
 
 	/***
@@ -119,11 +111,24 @@ public class NaiveStepCounter implements StepCounter {
 	 * @return the mean of the data
 	 */
 	private static double calculateMean(double[] arr) {
-		return 0.0;
+		double sum = 0;
+		for (int i = 0; i < arr.length; i++) {
+			sum += arr[i];
+		}
+
+		return sum / arr.length;
 	}
 
-	@Override
+	public double[] getDataForGraphing() {
+		if (this.magnitudes == null) {
+			double[][] accels = data.getDataForColumns(new String[] { "x acc", "y acc", "z acc" });
+			this.magnitudes = calculateMagnitudesFor(accels);
+		}
+
+		return this.magnitudes;
+	}
+
 	public void loadData(CSVData csvdata) {
-		this.data = csvdata;
+		this.data = data;
 	}
 }
